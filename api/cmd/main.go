@@ -5,7 +5,9 @@ import (
 
 	"github.com/ivanpaghubasan/hoa-hub/internal/config"
 	"github.com/ivanpaghubasan/hoa-hub/internal/database"
+	"github.com/ivanpaghubasan/hoa-hub/internal/repository"
 	"github.com/ivanpaghubasan/hoa-hub/internal/server"
+	"github.com/ivanpaghubasan/hoa-hub/internal/service"
 )
 
 func main() {
@@ -21,14 +23,13 @@ func main() {
 	defer db.Close()
 
 	// initialize repo
+	repos := repository.NewRepository(db)
 
 	// initialize service
-
-	// initialize server
+	services := service.NewService(repos)
 
 	// start server
-	var service interface{}
-	s := server.New(service, cfg)
+	s := server.New(services, cfg)
 	if err := s.Run(); err != nil {
 		log.Fatalf("Server failed to start: %v", err)
 	}
