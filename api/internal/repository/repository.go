@@ -7,15 +7,17 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+type UserRepository interface {
+	CreateUser(ctx context.Context, user *model.User) (*model.User, error)
+	GetUserByEmail(ctx context.Context, email string) (*model.User, error)
+}
+
 type Repository struct {
-	User interface {
-		CreateUser(ctx context.Context, user *model.User) (*model.User, error)
-		GetUserByEmail(ctx context.Context, email string) (*model.User, error)
-	}
+	UserRepository UserRepository
 }
 
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
-		User: NewUserRepository(db),
+		UserRepository: NewUserRepository(db),
 	}
 }
