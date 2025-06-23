@@ -8,19 +8,19 @@ import (
 )
 
 type Server struct {
-	Addr   string
+	Port   string
 	Engine *gin.Engine
 }
 
 func New(services interface{}, cfg *config.Config) *Server {
 	router := NewRouter()
 	return &Server{
-
+		Port:   cfg.Port,
 		Engine: router,
 	}
 }
 
 func (s *Server) Run() error {
-	fmt.Printf("Starting server at %s\n", s.Addr)
-	return s.Engine.Run(":" + s.Addr)
+	fmt.Printf("Starting server at port %s\n", s.Port)
+	return s.Engine.Run(":" + s.Port)
 }

@@ -9,7 +9,7 @@ import (
 
 type Config struct {
 	DatabaseURL string
-	Addr        string
+	Port        string
 }
 
 func LoadConfig() (*Config, error) {
@@ -47,7 +47,7 @@ func LoadConfig() (*Config, error) {
 
 	return &Config{
 		DatabaseURL: dbUrl,
-		Addr:        port,
+		Port:        port,
 	}, nil
 }
 
