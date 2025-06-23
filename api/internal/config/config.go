@@ -38,7 +38,7 @@ func LoadConfig() (*Config, error) {
 	if dbName == "" {
 		return nil, envErrorMsg("DB_NAME")
 	}
-	dbUrl := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=disable", dbUser, dbPassword, dbHost, dbPort, dbName)
+	dbUrl := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", dbUser, dbPassword, dbHost, dbPort, dbName)
 
 	port := os.Getenv("PORT")
 	if port == "" {

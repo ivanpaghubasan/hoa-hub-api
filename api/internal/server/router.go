@@ -11,7 +11,7 @@ func NewRouter() *gin.Engine {
 
 	v1 := r.Group("/v1")
 	{
-		v1.GET("heath", func(ctx *gin.Context) {
+		v1.GET("health", func(ctx *gin.Context) {
 			ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
 		})
 	}
