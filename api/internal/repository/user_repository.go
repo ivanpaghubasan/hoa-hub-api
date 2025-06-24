@@ -2,7 +2,10 @@ package repository
 
 import (
 	"context"
+	"fmt"
+	"time"
 
+	"github.com/google/uuid"
 	"github.com/ivanpaghubasan/hoa-hub/internal/model"
 	"github.com/jmoiron/sqlx"
 )
@@ -19,9 +22,24 @@ func (repo *UserRepositoryImpl) CreateUser(ctx context.Context, user *model.User
 	ctx, cancel := context.WithTimeout(ctx, QueryTimeout)
 	defer cancel()
 
-    query := `INSERT INTO ()`
+	tx, err := repo.db.BeginTxx(ctx, nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to begin transaction on create user: %w", err)
+	}
+	defer tx.Rollback()
 
-	return nil, nil
+	user.ID = uuid.New()
+	user.CreatedAt = time.Now()
+
+	query := `INSERT INTO (id, first_name, last_name, middle_na,e, date_of_birth, mobile_number, gender, email, password_hash, status, created_at)
+    VALUES (:id, :first_name, :last_name, :middle_name, :date_of_birth, :mobile_number, :gender, :email, :password_hash, :status, :created_at)`
+
+	_, err = tx.NamedExecContext(ctx, query, user)
+	if err != nil {
+		return nil, fmt.Errorf("failed to insert user: %w", err)
+	}
+
+	return user, nil
 }
 
 func (repo *UserRepositoryImpl) GetUserByEmail(ctx context.Context, email string) (*model.User, error) {
