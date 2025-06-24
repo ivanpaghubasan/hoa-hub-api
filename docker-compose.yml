@@ -11,6 +11,12 @@ services:
       - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
+    restart: on-failure
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -q -d hoa_db -U hoa_admin"]
+      timeout: 10s
+      interval: 5s
+      retries: 10
 
 volumes:
   db_data:
