@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"time"
 
@@ -43,5 +44,18 @@ func (repo *UserRepositoryImpl) CreateUser(ctx context.Context, user *model.User
 }
 
 func (repo *UserRepositoryImpl) GetUserByEmail(ctx context.Context, email string) (*model.User, error) {
-	return nil, nil
+	ctx, cancel := context.WithTimeout(ctx, QueryTimeout)
+	defer cancel()
+
+	var user model.User
+	query := `SELECT * FROM users WHERE email = $1`
+	err := repo.db.GetContext(ctx, &user, query, email)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, RecordNotFoundError
+		}
+		return nil, fmt.Errorf("failed to get user by email: %w", err)
+	}
+
+	return &user, nil
 }

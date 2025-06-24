@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/ivanpaghubasan/hoa-hub/internal/model"
@@ -10,6 +11,14 @@ import (
 
 const (
 	QueryTimeout = time.Second * 5
+	DateFormat   = "2006-01-02"
+
+	ActiveStatus   = "active"
+	InactiveStatus = "inactive"
+)
+
+var (
+	RecordNotFoundError = errors.New("record not found")
 )
 
 type UserRepository interface {
