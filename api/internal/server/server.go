@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/ivanpaghubasan/hoa-hub/internal/config"
+	"github.com/ivanpaghubasan/hoa-hub/internal/service"
 )
 
 type Server struct {
@@ -12,8 +13,9 @@ type Server struct {
 	Engine *gin.Engine
 }
 
-func New(services interface{}, cfg *config.Config) *Server {
-	router := NewRouter()
+func New(services *service.Service, cfg *config.Config) *Server {
+	router := NewRouter(services)
+
 	return &Server{
 		Port:   cfg.Port,
 		Engine: router,
