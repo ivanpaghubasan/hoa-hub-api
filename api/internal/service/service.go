@@ -15,20 +15,24 @@ type Service struct {
 }
 
 type CreateUserRequest struct {
-	FirstName  string  `json:"first_name" binding:"reqiured"`
-	LastName   string  `json:"last_name" binding:"required"`
-	MiddleName *string `json:"middle_name"`
-	Email      string  `json:"email" binding:"required,email"`
-	Password   string  `json:"password" binding:"required,min=8"`
-	UserType   string  `json:"user_type" binding:"required"`
+	FirstName    string  `json:"firsName" binding:"reqiured"`
+	LastName     string  `json:"lastName" binding:"required"`
+	MiddleName   *string `json:"middleName"`
+	Email        string  `json:"email" binding:"required,email"`
+	Password     string  `json:"password" binding:"required,min=8"`
+	DateOfBirth  string  `json:"dateOfBirth"`
+	MobileNumber string  `json:"mobileNumber"`
+	Gender       string  `json:"gender"`
+	Status       string  `json:"status"`
+	UserType     string  `json:"userType" binding:"required"`
 }
 
 type CreatUserResponse struct {
-	FirstName  string  `json:"first_name"`
-	LastName   string  `json:"last_name"`
-	MiddleName *string `json:"middle_name"`
+	FirstName  string  `json:"firstName"`
+	LastName   string  `json:"lastName"`
+	MiddleName *string `json:"middleName"`
 	Email      string  `json:"email"`
-	UserType   string  `json:"user_type"`
+	UserType   string  `json:"userType"`
 }
 
 func NewService(repos *repository.Repository) *Service {
