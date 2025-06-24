@@ -2,9 +2,14 @@ package repository
 
 import (
 	"context"
+	"time"
 
 	"github.com/ivanpaghubasan/hoa-hub/internal/model"
 	"github.com/jmoiron/sqlx"
+)
+
+const (
+	QueryTimeout = time.Second * 5
 )
 
 type UserRepository interface {

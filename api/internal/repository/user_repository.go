@@ -16,6 +16,11 @@ func NewUserRepository(db *sqlx.DB) *UserRepositoryImpl {
 }
 
 func (repo *UserRepositoryImpl) CreateUser(ctx context.Context, user *model.User) (*model.User, error) {
+	ctx, cancel := context.WithTimeout(ctx, QueryTimeout)
+	defer cancel()
+
+    query := `INSERT INTO ()`
+
 	return nil, nil
 }
 
