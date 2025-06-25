@@ -15,7 +15,7 @@ type Config struct {
 func LoadConfig() (*Config, error) {
 	err := godotenv.Load()
 	if err != nil {
-		return nil, fmt.Errorf("No .env file found, loading from environment variables. %w", err)
+		return nil, fmt.Errorf("no .env file found, loading from environment variables. %w", err)
 	}
 
 	dbUser := os.Getenv("DB_USER")
