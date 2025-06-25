@@ -18,8 +18,8 @@ const (
 )
 
 var (
-	RecordNotFoundError = errors.New("record not found")
-	RecordExistsError   = errors.New("record exists")
+	ErrRecordNotFound = errors.New("record not found")
+	ErrRecordExists   = errors.New("record exists")
 )
 
 type UserRepository interface {
