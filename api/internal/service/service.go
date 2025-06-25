@@ -24,7 +24,7 @@ type CreateUserRequest struct {
 	MobileNumber string  `json:"mobileNumber"`
 	Gender       string  `json:"gender"`
 	Status       string  `json:"status"`
-	UserType     string  `json:"userType" binding:"required"`
+	RoleID       string  `json:"roleId" binding:"required"`
 }
 
 type CreatUserResponse struct {
