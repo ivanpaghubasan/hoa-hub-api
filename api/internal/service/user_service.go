@@ -25,6 +25,10 @@ func (s *UserServiceImpl) CreateUser(ctx context.Context, req *CreateUserRequest
 		return nil, err
 	}
 
+	if result != nil {
+		return nil, repository.RecordExistsError
+	}
+
 	_ = result
 
 	var dateOfBirth *time.Time
