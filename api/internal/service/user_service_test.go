@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"errors"
-	"fmt"
 	"testing"
 
 	"github.com/ivanpaghubasan/hoa-hub/internal/model"
@@ -122,7 +121,7 @@ func TestCreateUser(t *testing.T) {
 			service := NewUserService(mockRepo())
 
 			resp, err := service.CreateUser(context.Background(), tc.req)
-			fmt.Println(resp)
+
 			if tc.expectErr {
 				if err == nil {
 					t.Errorf("expected error, got none")
