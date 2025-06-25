@@ -15,7 +15,7 @@ func NewUserHandler(service service.UserService) *UserHandler {
 	return &UserHandler{userService: service}
 }
 
-func (handler *UserHandler) CreateUser(c *gin.Context) {
+func (handler *UserHandler) RegisterUser(c *gin.Context) {
 	var request service.CreateUserRequest
 	if err := c.ShouldBindJSON(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
