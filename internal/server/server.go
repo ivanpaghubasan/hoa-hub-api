@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/ivanpaghubasan/hoa-hub/internal/config"
-	"github.com/ivanpaghubasan/hoa-hub/internal/service"
+	"github.com/ivanpaghubasan/hoa-hub-api/internal/config"
+	"github.com/ivanpaghubasan/hoa-hub-api/internal/service"
 )
 
 type Server struct {

@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/ivanpaghubasan/hoa-hub/internal/model"
+	"github.com/ivanpaghubasan/hoa-hub-api/internal/model"
 	"github.com/jmoiron/sqlx"
 )
 

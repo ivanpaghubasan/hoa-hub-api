@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/ivanpaghubasan/hoa-hub/internal/server/handler"
-	"github.com/ivanpaghubasan/hoa-hub/internal/service"
+	"github.com/ivanpaghubasan/hoa-hub-api/internal/server/handler"
+	"github.com/ivanpaghubasan/hoa-hub-api/internal/service"
 )
 
 func NewRouter(services *service.Service) *gin.Engine {

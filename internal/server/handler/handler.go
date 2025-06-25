@@ -1,6 +1,6 @@
 package handler
 
-import "github.com/ivanpaghubasan/hoa-hub/internal/service"
+import "github.com/ivanpaghubasan/hoa-hub-api/internal/service"
 
 type Handler struct {
 	UserHandler *UserHandler

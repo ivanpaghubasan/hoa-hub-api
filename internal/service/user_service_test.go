@@ -5,8 +5,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/ivanpaghubasan/hoa-hub/internal/model"
-	"github.com/ivanpaghubasan/hoa-hub/internal/repository"
+	"github.com/ivanpaghubasan/hoa-hub-api/internal/model"
+	"github.com/ivanpaghubasan/hoa-hub-api/internal/repository"
 )
 
 type MockUserRepository struct {

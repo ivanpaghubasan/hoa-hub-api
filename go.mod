@@ -1,4 +1,4 @@
-module github.com/ivanpaghubasan/hoa-hub
+module github.com/ivanpaghubasan/hoa-hub-api
 
 go 1.24.3
 

@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 
-	"github.com/ivanpaghubasan/hoa-hub/internal/repository"
+	"github.com/ivanpaghubasan/hoa-hub-api/internal/repository"
 )
 
 type UserService interface {

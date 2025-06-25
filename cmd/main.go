@@ -3,11 +3,11 @@ package main
 import (
 	"log"
 
-	"github.com/ivanpaghubasan/hoa-hub/internal/config"
-	"github.com/ivanpaghubasan/hoa-hub/internal/db"
-	"github.com/ivanpaghubasan/hoa-hub/internal/repository"
-	"github.com/ivanpaghubasan/hoa-hub/internal/server"
-	"github.com/ivanpaghubasan/hoa-hub/internal/service"
+	"github.com/ivanpaghubasan/hoa-hub-api/internal/config"
+	"github.com/ivanpaghubasan/hoa-hub-api/internal/db"
+	"github.com/ivanpaghubasan/hoa-hub-api/internal/repository"
+	"github.com/ivanpaghubasan/hoa-hub-api/internal/server"
+	"github.com/ivanpaghubasan/hoa-hub-api/internal/service"
 )
 
 func main() {

@@ -5,7 +5,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/ivanpaghubasan/hoa-hub/internal/model"
+	"github.com/ivanpaghubasan/hoa-hub-api/internal/model"
 	"github.com/jmoiron/sqlx"
 )
 

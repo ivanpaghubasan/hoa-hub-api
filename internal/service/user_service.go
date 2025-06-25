@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/ivanpaghubasan/hoa-hub/internal/model"
-	"github.com/ivanpaghubasan/hoa-hub/internal/repository"
-	"github.com/ivanpaghubasan/hoa-hub/internal/util"
+	"github.com/ivanpaghubasan/hoa-hub-api/internal/model"
+	"github.com/ivanpaghubasan/hoa-hub-api/internal/repository"
+	"github.com/ivanpaghubasan/hoa-hub-api/internal/util"
 )
 
 type UserServiceImpl struct {
