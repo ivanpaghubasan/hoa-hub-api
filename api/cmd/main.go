@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/ivanpaghubasan/hoa-hub/internal/config"
-	"github.com/ivanpaghubasan/hoa-hub/internal/database"
+	"github.com/ivanpaghubasan/hoa-hub/internal/db"
 	"github.com/ivanpaghubasan/hoa-hub/internal/repository"
 	"github.com/ivanpaghubasan/hoa-hub/internal/server"
 	"github.com/ivanpaghubasan/hoa-hub/internal/service"
@@ -16,7 +16,7 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	db, err := database.NewPostgresDB(cfg.DatabaseURL)
+	db, err := db.NewPostgresDB(cfg.DatabaseURL)
 	if err != nil {
 		log.Fatal(err.Error())
 	}

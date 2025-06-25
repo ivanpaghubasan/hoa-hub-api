@@ -1,4 +1,4 @@
-package database
+package db
 
 import (
 	"fmt"
@@ -20,7 +20,7 @@ func NewPostgresDB(databaseUrl string) (*sqlx.DB, error) {
 	db.SetConnMaxLifetime(5 * time.Minute)
 
 	if err := db.Ping(); err != nil {
-		return nil, fmt.Errorf("Could not ping database: %v", err)
+		return nil, fmt.Errorf("could not ping database: %v", err)
 	}
 
 	log.Println("Successfully connected to PostgreSQL!")
