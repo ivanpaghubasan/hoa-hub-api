@@ -103,7 +103,7 @@ func TestCreateUser(t *testing.T) {
 			setupMock: func() *MockUserRepository {
 				return &MockUserRepository{
 					GetUserByEmailFn: func(ctx context.Context, email string) (*model.User, error) {
-						return nil, repository.RecordNotFoundError
+						return nil, repository.ErrRecordNotFound
 					},
 					CreateUserFn: func(ctx context.Context, user *model.User) (*model.User, error) {
 						return user, nil

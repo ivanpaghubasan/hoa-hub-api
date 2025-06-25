@@ -52,7 +52,7 @@ func (repo *UserRepositoryImpl) GetUserByEmail(ctx context.Context, email string
 	err := repo.db.GetContext(ctx, &user, query, email)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, RecordNotFoundError
+			return nil, ErrRecordNotFound
 		}
 		return nil, fmt.Errorf("failed to get user by email: %w", err)
 	}
