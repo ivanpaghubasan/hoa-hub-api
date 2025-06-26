@@ -15,7 +15,7 @@ type Service struct {
 }
 
 type CreateUserRequest struct {
-	FirstName    string  `json:"firsName" binding:"reqiured"`
+	FirstName    string  `json:"firstName" binding:"required"`
 	LastName     string  `json:"lastName" binding:"required"`
 	MiddleName   *string `json:"middleName"`
 	Email        string  `json:"email" binding:"required,email"`
@@ -24,7 +24,7 @@ type CreateUserRequest struct {
 	MobileNumber string  `json:"mobileNumber"`
 	Gender       string  `json:"gender"`
 	Status       string  `json:"status"`
-	RoleID       string  `json:"roleId" binding:"required"`
+	//RoleID       string  `json:"roleId" binding:"required"`
 }
 
 type CreatUserResponse struct {

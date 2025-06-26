@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/ivanpaghubasan/hoa-hub-api/internal/model"
 	"github.com/ivanpaghubasan/hoa-hub-api/internal/repository"
 	"github.com/ivanpaghubasan/hoa-hub-api/internal/util"
@@ -44,7 +43,6 @@ func (s *UserServiceImpl) CreateUser(ctx context.Context, req *CreateUserRequest
 	}
 
 	user := &model.User{
-		ID:           uuid.New(),
 		FirstName:    req.FirstName,
 		LastName:     req.LastName,
 		MiddleName:   req.MiddleName,

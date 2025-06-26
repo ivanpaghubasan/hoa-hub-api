@@ -6,7 +6,7 @@ export
 
 DB_URL=postgres://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=disable
 
-.PHONY: migrate-create migrate-up migrate-down server-start
+.PHONY: migrate-create migrate-up migrate-down server-start test-api
 
 server-start:
 	@go run ./cmd
@@ -19,3 +19,6 @@ migrate-up:
 
 migrate-down:
 	@migrate -path $(MIGRATIONS_DIR) -database "$(DB_URL)" down -1
+
+test-api:
+	@go test ./... -v -cover
