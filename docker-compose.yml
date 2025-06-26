@@ -4,16 +4,16 @@ services:
   db:
     image: postgres:16-alpine
     environment:
-      POSTGRES_DB: hoa_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: hoa_admin
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
     restart: on-failure
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -q -d hoa_db -U hoa_admin"]
+      test: ["CMD-SHELL", "pg_isready -q -d \"$POSTGRES_DB\" -U \"$POSTGRES_PASSWORD\""]
       timeout: 10s
       interval: 5s
       retries: 10
