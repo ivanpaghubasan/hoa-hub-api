@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/ivanpaghubasan/hoa-hub-api/internal/constants"
 	"github.com/ivanpaghubasan/hoa-hub-api/internal/model"
 	"github.com/ivanpaghubasan/hoa-hub-api/internal/repository"
 	"github.com/ivanpaghubasan/hoa-hub-api/internal/util"
@@ -25,12 +26,12 @@ func (s *UserServiceImpl) CreateUser(ctx context.Context, req *CreateUserRequest
 	}
 
 	if result != nil {
-		return nil, repository.ErrRecordExists
+		return nil, constants.ErrRecordExists
 	}
 
 	var dateOfBirth *time.Time
 	if req.DateOfBirth != "" {
-		t, err := time.Parse(repository.DateFormat, req.DateOfBirth)
+		t, err := time.Parse(constants.DateFormat, req.DateOfBirth)
 		if err != nil {
 			return nil, fmt.Errorf("invalid date of birth format: %w", err)
 		}
@@ -51,7 +52,7 @@ func (s *UserServiceImpl) CreateUser(ctx context.Context, req *CreateUserRequest
 		Gender:       req.Gender,
 		Email:        req.Email,
 		PasswordHash: hashPassword,
-		Status:       repository.ActiveStatus,
+		Status:       constants.ActiveStatus,
 		CreatedAt:    time.Now(),
 	}
 
@@ -66,4 +67,24 @@ func (s *UserServiceImpl) CreateUser(ctx context.Context, req *CreateUserRequest
 		MiddleName: resp.MiddleName,
 		Email:      resp.Email,
 	}, nil
+}
+
+func (s *UserServiceImpl) LoginUser(ctx context.Context, req *LoginUserRequest) (*LoginUserResponse, error) {
+	user, err := s.userRepo.GetUserByEmail(ctx, req.Email)
+	if err != nil {
+		return nil, err
+	}
+
+	if user == nil {
+		return nil, constants.ErrRecordNotFound
+	}
+
+	isValid := util.VerifyPasswordHash(req.Password, user.PasswordHash)
+	if !isValid {
+		return nil, constants.ErrInvalidPassword
+	}
+
+	// Generate token
+
+	return &LoginUserResponse{}, nil
 }

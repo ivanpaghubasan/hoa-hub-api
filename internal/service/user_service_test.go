@@ -5,8 +5,8 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/ivanpaghubasan/hoa-hub-api/internal/constants"
 	"github.com/ivanpaghubasan/hoa-hub-api/internal/model"
-	"github.com/ivanpaghubasan/hoa-hub-api/internal/repository"
 )
 
 type MockUserRepository struct {
@@ -22,7 +22,7 @@ func (m *MockUserRepository) CreateUser(ctx context.Context, user *model.User) (
 	return m.CreateUserFn(ctx, user)
 }
 
-func TestCreateUser(t *testing.T) {
+func TesUserService_CreateUser(t *testing.T) {
 	tests := []struct {
 		name        string
 		req         *CreateUserRequest
@@ -103,7 +103,7 @@ func TestCreateUser(t *testing.T) {
 			setupMock: func() *MockUserRepository {
 				return &MockUserRepository{
 					GetUserByEmailFn: func(ctx context.Context, email string) (*model.User, error) {
-						return nil, repository.ErrRecordNotFound
+						return nil, constants.ErrRecordNotFound
 					},
 					CreateUserFn: func(ctx context.Context, user *model.User) (*model.User, error) {
 						return user, nil

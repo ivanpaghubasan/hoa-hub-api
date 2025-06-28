@@ -35,6 +35,14 @@ type CreatUserResponse struct {
 	UserType   string  `json:"userType"`
 }
 
+type LoginUserRequest struct {
+	Email    string `json:"email" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
+
+type LoginUserResponse struct {
+}
+
 func NewService(repos *repository.Repository) *Service {
 	return &Service{
 		UserService: NewUserService(repos.UserRepository),

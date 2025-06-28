@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/ivanpaghubasan/hoa-hub-api/internal/constants"
 	"github.com/ivanpaghubasan/hoa-hub-api/internal/model"
 	"github.com/jmoiron/sqlx"
 )
@@ -20,7 +21,7 @@ func NewUserRepository(db *sqlx.DB) *UserRepositoryImpl {
 }
 
 func (repo *UserRepositoryImpl) CreateUser(ctx context.Context, user *model.User) (*model.User, error) {
-	ctx, cancel := context.WithTimeout(ctx, QueryTimeout)
+	ctx, cancel := context.WithTimeout(ctx, constants.QueryTimeout)
 	defer cancel()
 
 	tx, err := repo.db.BeginTxx(ctx, nil)
@@ -32,7 +33,7 @@ func (repo *UserRepositoryImpl) CreateUser(ctx context.Context, user *model.User
 	user.ID = uuid.New()
 	user.CreatedAt = time.Now()
 
-	query := `INSERT INTO (id, first_name, last_name, middle_na,e, date_of_birth, mobile_number, gender, email, password_hash, status, created_at)
+	query := `INSERT INTO users (id, first_name, last_name, middle_na,e, date_of_birth, mobile_number, gender, email, password_hash, status, created_at)
     VALUES (:id, :first_name, :last_name, :middle_name, :date_of_birth, :mobile_number, :gender, :email, :password_hash, :status, :created_at)`
 
 	_, err = tx.NamedExecContext(ctx, query, user)
@@ -44,7 +45,7 @@ func (repo *UserRepositoryImpl) CreateUser(ctx context.Context, user *model.User
 }
 
 func (repo *UserRepositoryImpl) GetUserByEmail(ctx context.Context, email string) (*model.User, error) {
-	ctx, cancel := context.WithTimeout(ctx, QueryTimeout)
+	ctx, cancel := context.WithTimeout(ctx, constants.QueryTimeout)
 	defer cancel()
 
 	var user model.User
@@ -52,7 +53,7 @@ func (repo *UserRepositoryImpl) GetUserByEmail(ctx context.Context, email string
 	err := repo.db.GetContext(ctx, &user, query, email)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, ErrRecordNotFound
+			return nil, constants.ErrRecordNotFound
 		}
 		return nil, fmt.Errorf("failed to get user by email: %w", err)
 	}

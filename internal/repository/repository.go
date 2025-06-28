@@ -2,24 +2,9 @@ package repository
 
 import (
 	"context"
-	"errors"
-	"time"
 
 	"github.com/ivanpaghubasan/hoa-hub-api/internal/model"
 	"github.com/jmoiron/sqlx"
-)
-
-const (
-	QueryTimeout = time.Second * 5
-	DateFormat   = "2006-01-02"
-
-	ActiveStatus   = "active"
-	InactiveStatus = "inactive"
-)
-
-var (
-	ErrRecordNotFound = errors.New("record not found")
-	ErrRecordExists   = errors.New("record exists")
 )
 
 type UserRepository interface {

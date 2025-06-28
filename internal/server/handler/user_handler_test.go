@@ -21,7 +21,7 @@ func (m *MockUserService) CreateUser(ctx context.Context, req *service.CreateUse
 	return m.CreateUserFn(ctx, req)
 }
 
-func TestRegisterUser(t *testing.T) {
+func TestUserHandler_RegisterUser(t *testing.T) {
 	tests := []struct {
 		name           string
 		payload        map[string]interface{}
