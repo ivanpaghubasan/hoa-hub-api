@@ -45,7 +45,7 @@ func (s *UserServiceImpl) CreateUser(ctx context.Context, req *CreateUserRequest
 
 	hashPassword, err := util.HashPassword(req.Password)
 	if err != nil {
-
+		return nil, constants.ErrInternalServer
 	}
 
 	user := &model.User{

@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/google/uuid"
@@ -28,17 +29,25 @@ func (repo *UserRepositoryImpl) CreateUser(ctx context.Context, user *model.User
 	if err != nil {
 		return nil, fmt.Errorf("failed to begin transaction on create user: %w", err)
 	}
-	defer tx.Rollback()
+	defer func() {
+		if rErr := tx.Rollback(); rErr != nil && rErr != sql.ErrTxDone {
+			log.Printf("rollback failed: %v\n", rErr)
+		}
+	}()
 
 	user.ID = uuid.New()
 	user.CreatedAt = time.Now()
 
-	query := `INSERT INTO users (id, first_name, last_name, middle_na,e, date_of_birth, mobile_number, gender, email, password_hash, status, created_at)
+	query := `INSERT INTO users (id, first_name, last_name, middle_name, date_of_birth, mobile_number, gender, email, password_hash, status, created_at)
     VALUES (:id, :first_name, :last_name, :middle_name, :date_of_birth, :mobile_number, :gender, :email, :password_hash, :status, :created_at)`
 
 	_, err = tx.NamedExecContext(ctx, query, user)
 	if err != nil {
 		return nil, fmt.Errorf("failed to insert user: %w", err)
+	}
+
+	if err := tx.Commit(); err != nil {
+		return nil, fmt.Errorf("failed to commit transaction: %w", err)
 	}
 
 	return user, nil
