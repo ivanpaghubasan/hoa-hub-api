@@ -10,6 +10,7 @@ import (
 type Config struct {
 	DatabaseURL string
 	Port        string
+	Secret      string
 }
 
 func LoadConfig() (*Config, error) {
@@ -45,9 +46,15 @@ func LoadConfig() (*Config, error) {
 		return nil, envErrorMsg("PORT")
 	}
 
+	secret := os.Getenv("JWT_SECRET")
+	if secret == "" {
+		return nil, envErrorMsg("JWT_SECRET")
+	}
+
 	return &Config{
 		DatabaseURL: dbUrl,
 		Port:        port,
+		Secret:      secret,
 	}, nil
 }
 

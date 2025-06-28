@@ -4,7 +4,11 @@ import (
 	"context"
 	"errors"
 	"testing"
+	"time"
 
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
+	"github.com/ivanpaghubasan/hoa-hub-api/internal/auth"
 	"github.com/ivanpaghubasan/hoa-hub-api/internal/constants"
 	"github.com/ivanpaghubasan/hoa-hub-api/internal/model"
 )
@@ -22,7 +26,41 @@ func (m *MockUserRepository) CreateUser(ctx context.Context, user *model.User) (
 	return m.CreateUserFn(ctx, user)
 }
 
-func TesUserService_CreateUser(t *testing.T) {
+type MockJWTManager struct {
+	GenerateTokenFn     func(userID uuid.UUID) (string, error)
+	GenerateTokenCalled bool
+	ParseTokenFn        func(tokenStr string) (*auth.Claims, error)
+	ParseTokenCalled    bool
+}
+
+func (m *MockJWTManager) GenerateToken(userID uuid.UUID) (string, error) {
+	m.GenerateTokenCalled = true
+	return m.GenerateTokenFn(userID)
+}
+
+func (m *MockJWTManager) ParseToken(tokenStr string) (*auth.Claims, error) {
+	m.ParseTokenCalled = true
+	return m.ParseTokenFn(tokenStr)
+}
+
+func setupJWTManagerMock() *MockJWTManager {
+	return &MockJWTManager{
+		GenerateTokenFn: func(userID uuid.UUID) (string, error) {
+			return "token12345", nil
+		},
+		ParseTokenFn: func(tokenStr string) (*auth.Claims, error) {
+			return &auth.Claims{
+				UserID: "12345",
+				RegisteredClaims: jwt.RegisteredClaims{
+					ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
+					IssuedAt:  jwt.NewNumericDate(time.Now()),
+				},
+			}, nil
+		},
+	}
+}
+
+func TestUserService_CreateUser(t *testing.T) {
 	tests := []struct {
 		name        string
 		req         *CreateUserRequest
@@ -118,7 +156,8 @@ func TesUserService_CreateUser(t *testing.T) {
 
 		t.Run(tc.name, func(t *testing.T) {
 			mockRepo := tc.setupMock
-			service := NewUserService(mockRepo())
+			mockJwtManager := setupJWTManagerMock()
+			service := NewUserService(mockRepo(), mockJwtManager)
 
 			resp, err := service.CreateUser(context.Background(), tc.req)
 

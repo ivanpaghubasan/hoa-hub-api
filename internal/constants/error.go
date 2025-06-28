@@ -7,4 +7,5 @@ var (
 	ErrRecordExists    = errors.New("record exists")
 	ErrInvalidPassword = errors.New("invalid password")
 	ErrInvalidToken    = errors.New("invalid token")
+	ErrInternalServer  = errors.New("internal server errror")
 )

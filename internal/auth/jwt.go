@@ -22,7 +22,7 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-func NewJWTManager(secret string) *JWTManager {
+func NewJWTManager(secret string) IJWTManager {
 	return &JWTManager{secretKey: secret}
 }
 

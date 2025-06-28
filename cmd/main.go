@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 
+	"github.com/ivanpaghubasan/hoa-hub-api/internal/auth"
 	"github.com/ivanpaghubasan/hoa-hub-api/internal/config"
 	"github.com/ivanpaghubasan/hoa-hub-api/internal/db"
 	"github.com/ivanpaghubasan/hoa-hub-api/internal/repository"
@@ -25,8 +26,10 @@ func main() {
 	// initialize repo
 	repos := repository.NewRepository(db)
 
+	jwt := auth.NewJWTManager(cfg.Secret)
+
 	// initialize service
-	services := service.NewService(repos)
+	services := service.NewService(repos, jwt)
 
 	// start server
 	s := server.New(services, cfg)

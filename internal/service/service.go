@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 
+	"github.com/ivanpaghubasan/hoa-hub-api/internal/auth"
 	"github.com/ivanpaghubasan/hoa-hub-api/internal/repository"
 )
 
@@ -41,10 +42,11 @@ type LoginUserRequest struct {
 }
 
 type LoginUserResponse struct {
+	TokenClaims *auth.Claims
 }
 
-func NewService(repos *repository.Repository) *Service {
+func NewService(repos *repository.Repository, jwt auth.IJWTManager) *Service {
 	return &Service{
-		UserService: NewUserService(repos.UserRepository),
+		UserService: NewUserService(repos.UserRepository, jwt),
 	}
 }

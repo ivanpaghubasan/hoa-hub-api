@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/ivanpaghubasan/hoa-hub-api/internal/auth"
 	"github.com/ivanpaghubasan/hoa-hub-api/internal/constants"
 	"github.com/ivanpaghubasan/hoa-hub-api/internal/model"
 	"github.com/ivanpaghubasan/hoa-hub-api/internal/repository"
@@ -13,10 +14,14 @@ import (
 
 type UserServiceImpl struct {
 	userRepo repository.UserRepository
+	jwt      auth.IJWTManager
 }
 
-func NewUserService(repo repository.UserRepository) *UserServiceImpl {
-	return &UserServiceImpl{userRepo: repo}
+func NewUserService(repo repository.UserRepository, jwt auth.IJWTManager) UserService {
+	return &UserServiceImpl{
+		userRepo: repo,
+		jwt:      jwt,
+	}
 }
 
 func (s *UserServiceImpl) CreateUser(ctx context.Context, req *CreateUserRequest) (*CreatUserResponse, error) {
@@ -85,6 +90,10 @@ func (s *UserServiceImpl) LoginUser(ctx context.Context, req *LoginUserRequest) 
 	}
 
 	// Generate token
-
+	token, err := s.jwt.GenerateToken(user.ID)
+	if err != nil {
+		return nil, constants.ErrInternalServer
+	}
+	_ = token
 	return &LoginUserResponse{}, nil
 }
