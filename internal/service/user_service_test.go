@@ -4,12 +4,10 @@ import (
 	"context"
 	"errors"
 	"testing"
-	"time"
 
-	"github.com/golang-jwt/jwt/v5"
-	"github.com/ivanpaghubasan/hoa-hub-api/internal/auth"
 	"github.com/ivanpaghubasan/hoa-hub-api/internal/constants"
 	"github.com/ivanpaghubasan/hoa-hub-api/internal/model"
+	"github.com/ivanpaghubasan/hoa-hub-api/internal/util"
 )
 
 type MockUserRepository struct {
@@ -23,44 +21,6 @@ func (m *MockUserRepository) GetUserByEmail(ctx context.Context, email string) (
 
 func (m *MockUserRepository) CreateUser(ctx context.Context, user *model.User) (*model.User, error) {
 	return m.CreateUserFn(ctx, user)
-}
-
-type MockJWTAuth struct {
-	GenerateTokenFn        func(user *model.User) (auth.TokenPairs, error)
-	GenerateTokenCalled    bool
-	ParseAccessTokenFn     func(tokenStr string) (*auth.Claims, error)
-	ParseAccessTokenCalled bool
-}
-
-func (m *MockJWTAuth) GenerateToken(user *model.User) (auth.TokenPairs, error) {
-	m.GenerateTokenCalled = true
-	return m.GenerateTokenFn(user)
-}
-
-func (m *MockJWTAuth) ParseAccessToken(tokenStr string) (*auth.Claims, error) {
-	m.ParseAccessTokenCalled = true
-	return m.ParseAccessTokenFn(tokenStr)
-}
-
-func setupJWTManagerMock() *MockJWTAuth {
-	return &MockJWTAuth{
-		GenerateTokenFn: func(user *model.User) (auth.TokenPairs, error) {
-			return auth.TokenPairs{
-				AccessToken:  "token12345",
-				RefreshToken: "refresh12345",
-			}, nil
-		},
-		ParseAccessTokenFn: func(tokenStr string) (*auth.Claims, error) {
-			return &auth.Claims{
-				UserID: "12345",
-				Name:   "John Doe",
-				RegisteredClaims: jwt.RegisteredClaims{
-					ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
-					IssuedAt:  jwt.NewNumericDate(time.Now()),
-				},
-			}, nil
-		},
-	}
 }
 
 func TestUserService_CreateUser(t *testing.T) {
@@ -156,17 +116,14 @@ func TestUserService_CreateUser(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-
 		t.Run(tc.name, func(t *testing.T) {
 			mockRepo := tc.setupMock
-			mockJwtManager := setupJWTManagerMock()
-			service := NewUserService(mockRepo(), mockJwtManager)
+			service := NewUserService(mockRepo())
 
 			resp, err := service.CreateUser(context.Background(), tc.req)
-
 			if tc.expectErr {
 				if err == nil {
-					t.Errorf("expected error, got none")
+					t.Error("expected error, got none")
 				}
 			} else {
 				if err != nil {
@@ -177,6 +134,90 @@ func TestUserService_CreateUser(t *testing.T) {
 				}
 			}
 
+		})
+	}
+}
+
+func TestUserService_LoginUser(t *testing.T) {
+	password := "password12345"
+	hashPassword, _ := util.HashPassword(password)
+
+	tests := []struct {
+		name        string
+		req         *LoginUserRequest
+		setupMock   func() *MockUserRepository
+		expectErr   bool
+		expectedErr error
+	}{
+		{
+			name: "successful login",
+			req: &LoginUserRequest{
+				Email:    "john.doe@test.com",
+				Password: password,
+			},
+			setupMock: func() *MockUserRepository {
+				return &MockUserRepository{
+					GetUserByEmailFn: func(ctx context.Context, email string) (*model.User, error) {
+						return &model.User{Email: email, PasswordHash: hashPassword}, nil
+					},
+				}
+			},
+			expectErr:   false,
+			expectedErr: nil,
+		},
+		{
+			name: "user not found",
+			req: &LoginUserRequest{
+				Email:    "john@test.com",
+				Password: password,
+			},
+			setupMock: func() *MockUserRepository {
+				return &MockUserRepository{
+					GetUserByEmailFn: func(ctx context.Context, email string) (*model.User, error) {
+						return nil, constants.ErrRecordNotFound
+					},
+				}
+			},
+			expectErr:   true,
+			expectedErr: constants.ErrRecordNotFound,
+		},
+		{
+			name: "invalid password",
+			req: &LoginUserRequest{
+				Email:    "john@test.com",
+				Password: "wron_password123",
+			},
+			setupMock: func() *MockUserRepository {
+				return &MockUserRepository{
+					GetUserByEmailFn: func(ctx context.Context, email string) (*model.User, error) {
+						return &model.User{Email: email, PasswordHash: hashPassword}, nil
+					},
+				}
+			},
+			expectErr:   true,
+			expectedErr: constants.ErrInvalidPassword,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			mockRepo := tc.setupMock()
+			service := NewUserService(mockRepo)
+			user, err := service.LoginUser(context.Background(), tc.req)
+			if tc.expectErr {
+				if err == nil {
+					t.Error("expected error, got none")
+				} else if err != tc.expectedErr {
+					t.Errorf("expected error %v, got %v", tc.expectedErr, err)
+				}
+			} else {
+				if err != nil {
+					t.Errorf("unexpected error: %v", err)
+				}
+				if user.Email != tc.req.Email {
+					t.Errorf("expected email %s, got %s", tc.req.Email, user.Email)
+				}
+			}
 		})
 	}
 }

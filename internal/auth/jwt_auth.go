@@ -14,6 +14,8 @@ import (
 type IJWTAuth interface {
 	GenerateToken(user *model.User) (TokenPairs, error)
 	ParseAccessToken(tokenStr string) (*Claims, error)
+	GetRefreshCookie(refreshToken string) *http.Cookie
+	GetExpiredRefreshCookie() *http.Cookie
 }
 
 type JWTAuth struct {

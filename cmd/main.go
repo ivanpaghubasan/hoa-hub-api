@@ -29,10 +29,10 @@ func main() {
 	jwt := auth.NewJWTAuth(cfg.JWTSecret, cfg.JWTIssuer, cfg.JWTAudience, cfg.JWTCookieDomain)
 
 	// initialize service
-	services := service.NewService(repos, jwt)
+	services := service.NewService(repos)
 
 	// start server
-	s := server.New(services, cfg)
+	s := server.New(services, cfg, jwt)
 	if err := s.Run(); err != nil {
 		log.Fatalf("Server failed to start: %v", err)
 	}

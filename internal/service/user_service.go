@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/ivanpaghubasan/hoa-hub-api/internal/auth"
 	"github.com/ivanpaghubasan/hoa-hub-api/internal/constants"
 	"github.com/ivanpaghubasan/hoa-hub-api/internal/model"
 	"github.com/ivanpaghubasan/hoa-hub-api/internal/repository"
@@ -14,13 +13,11 @@ import (
 
 type UserServiceImpl struct {
 	userRepo repository.UserRepository
-	jwt      auth.IJWTAuth
 }
 
-func NewUserService(repo repository.UserRepository, jwt auth.IJWTAuth) UserService {
+func NewUserService(repo repository.UserRepository) UserService {
 	return &UserServiceImpl{
 		userRepo: repo,
-		jwt:      jwt,
 	}
 }
 
@@ -74,7 +71,7 @@ func (s *UserServiceImpl) CreateUser(ctx context.Context, req *CreateUserRequest
 	}, nil
 }
 
-func (s *UserServiceImpl) LoginUser(ctx context.Context, req *LoginUserRequest) (*LoginUserResponse, error) {
+func (s *UserServiceImpl) LoginUser(ctx context.Context, req *LoginUserRequest) (*model.User, error) {
 	user, err := s.userRepo.GetUserByEmail(ctx, req.Email)
 	if err != nil {
 		return nil, err
@@ -89,11 +86,5 @@ func (s *UserServiceImpl) LoginUser(ctx context.Context, req *LoginUserRequest) 
 		return nil, constants.ErrInvalidPassword
 	}
 
-	// Generate token
-	token, err := s.jwt.GenerateToken(user)
-	if err != nil {
-		return nil, constants.ErrInternalServer
-	}
-	_ = token
-	return &LoginUserResponse{}, nil
+	return user, nil
 }

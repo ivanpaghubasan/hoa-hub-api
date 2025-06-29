@@ -3,12 +3,13 @@ package service
 import (
 	"context"
 
-	"github.com/ivanpaghubasan/hoa-hub-api/internal/auth"
+	"github.com/ivanpaghubasan/hoa-hub-api/internal/model"
 	"github.com/ivanpaghubasan/hoa-hub-api/internal/repository"
 )
 
 type UserService interface {
 	CreateUser(ctx context.Context, user *CreateUserRequest) (*CreatUserResponse, error)
+	LoginUser(ctx context.Context, req *LoginUserRequest) (*model.User, error)
 }
 
 type Service struct {
@@ -41,12 +42,8 @@ type LoginUserRequest struct {
 	Password string `json:"password" binding:"required"`
 }
 
-type LoginUserResponse struct {
-	TokenClaims *auth.Claims
-}
-
-func NewService(repos *repository.Repository, jwt auth.IJWTAuth) *Service {
+func NewService(repos *repository.Repository) *Service {
 	return &Service{
-		UserService: NewUserService(repos.UserRepository, jwt),
+		UserService: NewUserService(repos.UserRepository),
 	}
 }
