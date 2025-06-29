@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/google/uuid"
 	"github.com/ivanpaghubasan/hoa-hub-api/internal/auth"
 	"github.com/ivanpaghubasan/hoa-hub-api/internal/constants"
 	"github.com/ivanpaghubasan/hoa-hub-api/internal/model"
@@ -26,31 +25,35 @@ func (m *MockUserRepository) CreateUser(ctx context.Context, user *model.User) (
 	return m.CreateUserFn(ctx, user)
 }
 
-type MockJWTManager struct {
-	GenerateTokenFn     func(userID uuid.UUID) (string, error)
-	GenerateTokenCalled bool
-	ParseTokenFn        func(tokenStr string) (*auth.Claims, error)
-	ParseTokenCalled    bool
+type MockJWTAuth struct {
+	GenerateTokenFn        func(user *model.User) (auth.TokenPairs, error)
+	GenerateTokenCalled    bool
+	ParseAccessTokenFn     func(tokenStr string) (*auth.Claims, error)
+	ParseAccessTokenCalled bool
 }
 
-func (m *MockJWTManager) GenerateToken(userID uuid.UUID) (string, error) {
+func (m *MockJWTAuth) GenerateToken(user *model.User) (auth.TokenPairs, error) {
 	m.GenerateTokenCalled = true
-	return m.GenerateTokenFn(userID)
+	return m.GenerateTokenFn(user)
 }
 
-func (m *MockJWTManager) ParseToken(tokenStr string) (*auth.Claims, error) {
-	m.ParseTokenCalled = true
-	return m.ParseTokenFn(tokenStr)
+func (m *MockJWTAuth) ParseAccessToken(tokenStr string) (*auth.Claims, error) {
+	m.ParseAccessTokenCalled = true
+	return m.ParseAccessTokenFn(tokenStr)
 }
 
-func setupJWTManagerMock() *MockJWTManager {
-	return &MockJWTManager{
-		GenerateTokenFn: func(userID uuid.UUID) (string, error) {
-			return "token12345", nil
+func setupJWTManagerMock() *MockJWTAuth {
+	return &MockJWTAuth{
+		GenerateTokenFn: func(user *model.User) (auth.TokenPairs, error) {
+			return auth.TokenPairs{
+				AccessToken:  "token12345",
+				RefreshToken: "refresh12345",
+			}, nil
 		},
-		ParseTokenFn: func(tokenStr string) (*auth.Claims, error) {
+		ParseAccessTokenFn: func(tokenStr string) (*auth.Claims, error) {
 			return &auth.Claims{
 				UserID: "12345",
+				Name:   "John Doe",
 				RegisteredClaims: jwt.RegisteredClaims{
 					ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
 					IssuedAt:  jwt.NewNumericDate(time.Now()),
