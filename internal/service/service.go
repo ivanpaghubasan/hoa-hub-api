@@ -45,7 +45,7 @@ type LoginUserResponse struct {
 	TokenClaims *auth.Claims
 }
 
-func NewService(repos *repository.Repository, jwt auth.IJWTManager) *Service {
+func NewService(repos *repository.Repository, jwt auth.IJWTAuth) *Service {
 	return &Service{
 		UserService: NewUserService(repos.UserRepository, jwt),
 	}

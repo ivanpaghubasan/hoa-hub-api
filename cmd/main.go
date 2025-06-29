@@ -26,7 +26,7 @@ func main() {
 	// initialize repo
 	repos := repository.NewRepository(db)
 
-	jwt := auth.NewJWTManager(cfg.Secret)
+	jwt := auth.NewJWTAuth(cfg.JWTSecret, cfg.JWTIssuer, cfg.JWTAudience, cfg.JWTCookieDomain)
 
 	// initialize service
 	services := service.NewService(repos, jwt)

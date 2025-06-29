@@ -8,9 +8,12 @@ import (
 )
 
 type Config struct {
-	DatabaseURL string
-	Port        string
-	Secret      string
+	DatabaseURL     string
+	Port            string
+	JWTIssuer       string
+	JWTAudience     string
+	JWTSecret       string
+	JWTCookieDomain string
 }
 
 func LoadConfig() (*Config, error) {
@@ -46,15 +49,33 @@ func LoadConfig() (*Config, error) {
 		return nil, envErrorMsg("PORT")
 	}
 
+	issuer := os.Getenv("JWT_ISSUER")
+	if issuer == "" {
+		return nil, envErrorMsg("JWT_ISSUER")
+	}
+
+	audience := os.Getenv("JWT_AUDIENCE")
+	if audience == "" {
+		return nil, envErrorMsg("JWT_AUDIENCE")
+	}
+
 	secret := os.Getenv("JWT_SECRET")
 	if secret == "" {
 		return nil, envErrorMsg("JWT_SECRET")
 	}
 
+	cookieDomain := os.Getenv("JWT_COOKIE_DOMAIN")
+	if cookieDomain == "" {
+		return nil, envErrorMsg("JWT_COOKIE_DOMAIN")
+	}
+
 	return &Config{
-		DatabaseURL: dbUrl,
-		Port:        port,
-		Secret:      secret,
+		DatabaseURL:     dbUrl,
+		Port:            port,
+		JWTIssuer:       issuer,
+		JWTAudience:     audience,
+		JWTSecret:       secret,
+		JWTCookieDomain: cookieDomain,
 	}, nil
 }
 

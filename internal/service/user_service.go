@@ -14,10 +14,10 @@ import (
 
 type UserServiceImpl struct {
 	userRepo repository.UserRepository
-	jwt      auth.IJWTManager
+	jwt      auth.IJWTAuth
 }
 
-func NewUserService(repo repository.UserRepository, jwt auth.IJWTManager) UserService {
+func NewUserService(repo repository.UserRepository, jwt auth.IJWTAuth) UserService {
 	return &UserServiceImpl{
 		userRepo: repo,
 		jwt:      jwt,
@@ -90,7 +90,7 @@ func (s *UserServiceImpl) LoginUser(ctx context.Context, req *LoginUserRequest) 
 	}
 
 	// Generate token
-	token, err := s.jwt.GenerateToken(user.ID)
+	token, err := s.jwt.GenerateToken(user)
 	if err != nil {
 		return nil, constants.ErrInternalServer
 	}
