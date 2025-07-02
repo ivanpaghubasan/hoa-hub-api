@@ -1,0 +1,1 @@
+HOA Hub API is a backend service built using Golang. It is designed to support the needs of a homeowners association (HOA) by providing functionality for member and admin authentication, with plans to expand to features like fee tracking and digital payments.
